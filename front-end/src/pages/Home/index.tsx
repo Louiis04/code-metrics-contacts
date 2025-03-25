@@ -45,6 +45,36 @@ export default function Home() {
     setOrderBy((orderBy) => (orderBy === "ASC" ? "DESC" : "ASC"));
   }
 
+  async function handleDeleteContact(contact: IContact) {
+    if (!confirm(`Tem certeza que deseja excluir o contato "${contact.name}"?`)) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await ContactsService.deleteContact(contact.id);
+      
+      // Atualiza a lista removendo o contato excluído
+      setContacts((prevContacts) => 
+        prevContacts.filter((c) => c.id !== contact.id)
+      );
+      
+      alert('Contato excluído com sucesso!');
+    } catch (error: any) {
+      console.error('Erro ao excluir contato:', error);
+      
+      if (error.response) {
+        alert(`Erro ao excluir contato: ${error.response.data.error || 'Erro desconhecido'}`);
+      } else if (error.request) {
+        alert('Erro de conexão com o servidor');
+      } else {
+        alert(`Erro ao excluir contato: ${error.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <>
       {isLoading && <Loader isLoading={isLoading} />}
@@ -73,7 +103,11 @@ export default function Home() {
           <p className={styles.emptyContacts}>Nenhum contato encontrado.</p>
         )}
         {contacts.map((contact) => (
-          <ContactCard key={contact.id} data={contact} />
+          <ContactCard 
+            key={contact.id} 
+            data={contact} 
+            onDelete={handleDeleteContact}
+          />
         ))}
       </section>
     </>

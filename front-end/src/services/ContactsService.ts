@@ -8,7 +8,7 @@ interface IGetContactsParams {
   orderBy?: orderBy;
 }
 
-interface ICreateContactParams {
+interface IContactParams {
   name: string;
   email: string;
   phone: string;
@@ -21,12 +21,26 @@ class ContactsService {
     return response.data;
   }
 
-  async createContact(data: ICreateContactParams) {
+  async createContact(data: IContactParams) {
     const response = await api.post<IContact>("/contacts", data);
+    return response.data;
+  }
+
+  async getContactById(id: string) {
+    const response = await api.get<IContact>(`/contacts/${id}`);
+    return response.data;
+  }
+
+  async updateContact(id: string, data: IContactParams) {
+    const response = await api.put<IContact>(`/contacts/${id}`, data);
+    return response.data;
+  }
+  async deleteContact(id: string) {
+    const response = await api.delete(`/contacts/${id}`);
     return response.data;
   }
 }
 
 export default new ContactsService();
 
-export type { orderBy };
+export type { orderBy, IContactParams };
