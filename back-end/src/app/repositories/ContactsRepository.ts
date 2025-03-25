@@ -38,13 +38,15 @@ class ContactsRepository {
   }
 
   async create({ name, email, phone, category_id }: Omit<IContact, 'id'>) {
+    const categoryIdValue = category_id || null;
+    
     const [row] = await db.query(
       `
       INSERT INTO contacts(name, email, phone, category_id)
       VALUES($1, $2, $3, $4)
       RETURNING *
     `,
-      [name, email, phone, category_id],
+      [name, email, phone, categoryIdValue],
     );
 
     return row;

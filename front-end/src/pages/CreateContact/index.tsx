@@ -11,7 +11,7 @@ interface FormData {
   name: string;
   email: string;
   phone: string;
-  category_id: string;
+  category_id: string ;
 }
 
 interface FormErrors {
@@ -86,11 +86,35 @@ export default function CreateContact() {
 
     try {
       setIsLoading(true);
-      await ContactsService.createContact(formData);
+      
+      const contactData = {
+        ...formData,
+        category_id: formData.category_id || undefined
+      };
+      
+      console.log('Enviando dados:', contactData);
+      
+      const result = await ContactsService.createContact(contactData);
+      console.log('Resultado da criação:', result);
+      
       navigate("/");
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao criar contato");
+    } catch (error: any) {
+      console.error('Erro detalhado:', error);
+      
+      if (error.response) {
+        // O servidor respondeu com um status de erro
+        console.error('Dados do erro:', error.response.data);
+        console.error('Status do erro:', error.response.status);
+        alert(`Erro ao criar contato: ${error.response.data.error || 'Erro desconhecido'}`);
+      } else if (error.request) {
+        // A requisição foi feita mas não houve resposta
+        console.error('Sem resposta do servidor:', error.request);
+        alert('Erro de conexão com o servidor');
+      } else {
+        // Erro ao configurar a requisição
+        console.error('Mensagem de erro:', error.message);
+        alert(`Erro ao criar contato: ${error.message}`);
+      }
     } finally {
       setIsLoading(false);
     }

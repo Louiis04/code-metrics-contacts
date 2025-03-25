@@ -12,7 +12,7 @@ interface ICreateContactParams {
   name: string;
   email: string;
   phone: string;
-  category_id: string;
+  category_id?: string;
 }
 
 class ContactsService {
