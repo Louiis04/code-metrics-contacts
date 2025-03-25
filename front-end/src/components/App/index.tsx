@@ -1,13 +1,16 @@
-import { Home } from "../../pages";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "../../routes";
 import { Header } from "../Layout";
 import styles from "./styles.module.css";
 
 function App() {
   return (
-    <div className={styles.wrapper}>
-      <Header />
-      <Home />
-    </div>
+    <BrowserRouter>
+      <div className={styles.wrapper}>
+        <Header />
+        <AppRoutes />
+      </div>
+    </BrowserRouter>
   );
 }
 
