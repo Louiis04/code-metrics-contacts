@@ -62,3 +62,23 @@
   border-color: var(--primary-6);
   box-shadow: 0 0 0 3px var(--primary-4);
 }
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addCategoryButton {
+  background-color: transparent;
+  color: var(--primary-5);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.addCategoryButton:hover {
+  color: var(--primary-7);
+  text-decoration: underline;
+}

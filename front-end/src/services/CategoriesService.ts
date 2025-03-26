@@ -12,6 +12,11 @@ class CategoriesService {
     const response = await api.get<ICategory[]>("/categories", { params });
     return response.data;
   }
+  
+  async createCategory({ name }: { name: string }) {
+    const response = await api.post<ICategory>("/categories", { name });
+    return response.data;
+  }
 }
 
 export default new CategoriesService();

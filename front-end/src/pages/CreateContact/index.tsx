@@ -6,6 +6,7 @@ import { ContactsService } from "../../services";
 import { ICategory } from "../../@types/Category";
 import { CategoriesService } from "../../services";
 import { useEffect } from "react";
+import CategoryModal from "../../components/CategoryModal";
 
 interface FormData {
   name: string;
@@ -31,6 +32,7 @@ export default function CreateContact() {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadCategories() {
@@ -120,9 +122,18 @@ export default function CreateContact() {
     }
   }
 
+  function handleAddCategory(newCategory: ICategory) {
+    setCategories((prevCategories) => [...prevCategories, newCategory]);
+  }
+
   return (
     <>
       {isLoading && <Loader isLoading={isLoading} />}
+      <CategoryModal 
+        isOpen={isCategoryModalOpen} 
+        onClose={() => setIsCategoryModalOpen(false)} 
+        onCategoryAdded={handleAddCategory} 
+      />
       <div className={styles.container}>
         <h1>Novo Contato</h1>
 
@@ -167,7 +178,9 @@ export default function CreateContact() {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="category_id">Categoria</label>
+            <div className={styles.categoryHeader}>
+              <label htmlFor="category_id">Categoria</label>
+            </div>
             <select
               id="category_id"
               name="category_id"
@@ -185,7 +198,13 @@ export default function CreateContact() {
           </div>
 
           <div className={styles.buttonGroup}>
-            <Button type="button" onClick={() => navigate("/")} className={styles.cancelButton}>
+          <Button 
+                type="button"   
+                onClick={() => setIsCategoryModalOpen(true)}
+              >
+                + Nova categoria
+              </Button>
+            <Button type="button" onClick={() => navigate("/")}>
               Cancelar
             </Button>
             <Button type="submit">Cadastrar</Button>
